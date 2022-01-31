@@ -20,9 +20,19 @@ const create = async ({ name, quantity }) => {
     const product = await productsModel.create({ name, quantity });
   
     return { id: product.id };
-  };
+};
+
+const getById = async ({ id }) => {
+  const catchedId = await productsModel.getById(id);
+
+  if (!catchedId) {
+    return { status: 404 };
+  }
+  return catchedId;
+};
 
 module.exports = {
     getAll,
     create,
+    getById,
 };
