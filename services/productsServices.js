@@ -22,7 +22,7 @@ const create = async ({ name, quantity }) => {
     return { id: product.id };
 };
 
-const getById = async ({ id }) => {
+const getById = async (id) => {
   const catchedId = await productsModel.getById(id);
 
   if (!catchedId) {
