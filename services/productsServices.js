@@ -31,8 +31,18 @@ const getById = async (id) => {
   return catchedId;
 };
 
+const productUpdate = async ({ id, name, quantity }) => {
+  const product = await productsModel.productUpdate({ id, name, quantity });
+
+  if (!product.update) {
+    return { status: 404 };
+  }
+  return product;
+};
+
 module.exports = {
     getAll,
     create,
     getById,
+    productUpdate,
 };
