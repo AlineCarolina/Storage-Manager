@@ -19,7 +19,7 @@ app.get('/products', productsControllers.getAll);
 app.post('/products', verifyName, verifyQuantity, productsControllers.create);
 
 // Requisito 02
-app.get('/products:id', productsControllers.getById);
+app.get('/products/:id', productsControllers.getById);
 
 app.listen(process.env.PORT, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);
