@@ -22,6 +22,8 @@ app.get('/products/:id', productsControllers.getById);
 
 app.put('/products/:id', verifyName, verifyQuantity, productsControllers.productUpdate);
 
+app.delete('/products/:id', productsControllers.deleteProducts);
+
 app.listen(process.env.PORT, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);
 });
