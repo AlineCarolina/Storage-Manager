@@ -2,11 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const productsControllers = require('./controllers/productsControllers');
+const { verifyName, verifyQuantity, verifySales } = require('./controllers/validations');
+const salesControllers = require('./controllers/salesControllers');
+
 const app = express();
 app.use(bodyParser.json());
-
-const productsControllers = require('./controllers/productsControllers');
-const { verifyName, verifyQuantity } = require('./controllers/validations');
 
 // não remova esse endpoint, e para o avaliador funcionar
 
@@ -23,6 +24,8 @@ app.get('/products/:id', productsControllers.getById);
 app.put('/products/:id', verifyName, verifyQuantity, productsControllers.productUpdate);
 
 app.delete('/products/:id', productsControllers.deleteProducts);
+
+app.post('/sales', verifySales, salesControllers.create);
 
 app.listen(process.env.PORT, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);

@@ -26,7 +26,29 @@ const verifyName = (req, res, next) => {
     next();
   };
 
+  const verifySales = (req, res, next) => {
+    const response = req.body;
+  
+    if (response.some(({ product_id: productId }) => !productId)) {
+      return res.status(400)
+        .json({ message: '"product_id" is required' });
+    }
+  
+    if (response.some(({ quantity }) => quantity === undefined)) {
+      return res.status(400)
+      .json({ message: '"quantity" is required' });
+    }
+  
+    if (response.some(({ quantity }) => typeof quantity !== 'number' || quantity <= 0)) {
+      return res.status(422)
+        .json({ message: '"quantity" must be a number larger than or equal to 1' });
+    }
+  
+    next();
+  };
+
 module.exports = {
     verifyName,
     verifyQuantity,
+    verifySales,
 };
