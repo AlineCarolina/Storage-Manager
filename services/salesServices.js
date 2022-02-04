@@ -1,4 +1,4 @@
-const salesModels = require('../models/salesModel');
+const salesModel = require('../models/salesModel');
 const productsModel = require('../models/productsModel');
 
 const create = async (sales) => {
@@ -8,13 +8,13 @@ const create = async (sales) => {
   
     if (allProducts.length !== sales.length) return false;
   
-    const id = await salesModels.create(sales);
+    const id = await salesModel.create(sales);
   
     return id;
   };
 
 const getAll = async () => {
-    const sales = await salesModels.getAll();
+    const sales = await salesModel.getAll();
 
     if (!sales) {
         return { status: 404 };
@@ -24,11 +24,10 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-    const catchedId = await salesModels.getById(id);
+    const catchedId = await salesModel.getById(id);
 
-    if (!catchedId) {
-        return { status: 404 };
-    }
+    if (!catchedId || catchedId.length === 0) return { status: 404 };
+
     return catchedId;
 };
 

@@ -23,10 +23,15 @@ const getAll = async () => {
 };
 
 const getById = async (id) => {
-  const [[idRow]] = await connection
-    .execute('SELECT date, product_id, quantity FROM sales_products INNER JOIN sales WHERE id = ?',
-      [id]);
-    return idRow;
+  const [salesRow] = await connection
+    .execute(
+      `SELECT date, product_id, quantity FROM sales
+          INNER JOIN sales_products
+          ON sales.id = sales_products.sale_id
+          WHERE sales.id = ?`,
+          [id],
+      );
+    return salesRow;
 };
 
 module.exports = {
