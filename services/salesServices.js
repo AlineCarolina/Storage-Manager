@@ -13,6 +13,27 @@ const create = async (sales) => {
     return id;
   };
 
+const getAll = async () => {
+    const sales = await salesModels.getAll();
+
+    if (!sales) {
+        return { status: 404 };
+      }
+
+    return sales;
+};
+
+const getById = async (id) => {
+    const catchedId = await salesModels.getById(id);
+
+    if (!catchedId) {
+        return { status: 404 };
+    }
+    return catchedId;
+};
+
 module.exports = {
     create,
+    getAll,
+    getById,
 };
