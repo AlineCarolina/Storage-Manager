@@ -31,8 +31,22 @@ const getById = async (id) => {
     return catchedId;
 };
 
+const saleUpdate = async (id, arrSales) => {
+  const allProducts = await Promise.all(
+    arrSales.map(({ product_id }) => productsModel
+    .getById(product_id)),
+  );
+
+  if (allProducts.length !== arrSales.length) return false;
+
+  const response = await salesModel.saleUpdate(id, arrSales);
+
+  return response;
+};
+
 module.exports = {
     create,
     getAll,
     getById,
+    saleUpdate,
 };

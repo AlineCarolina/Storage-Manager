@@ -40,8 +40,24 @@ const getById = async (req, res, next) => {
     }
 };
 
+const saleUpdate = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const update = req.body;
+        const response = await salesServices.saleUpdate(+id, update);
+
+    if (!response) {
+      return res.status(400).json({ message: '"product_id" is required' });
+    }
+    return res.status(200).json({ saleId: +id, itemUpdated: update });
+    } catch (err) {
+        next(err);
+    }
+};
+
 module.exports = {
     create,
     getAll,
     getById,
+    saleUpdate,
 };

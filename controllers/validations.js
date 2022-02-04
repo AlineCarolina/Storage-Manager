@@ -28,7 +28,7 @@ const verifyName = (req, res, next) => {
 
   const verifySales = (req, res, next) => {
     const response = req.body;
-  
+ 
     if (response.some(({ product_id: productId }) => !productId)) {
       return res.status(400)
         .json({ message: '"product_id" is required' });
