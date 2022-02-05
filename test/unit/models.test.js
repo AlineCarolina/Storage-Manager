@@ -11,11 +11,13 @@ describe('Model Products', () => {
         after(async () => {
             connection.execute.restore();
         });
+
         it('retorna um array', async () => {
             const response = await productsModel.getAll();
 
             expect(response).to.be.an('array');
         });
+
         it('o array está vazio', async () => {
             const response = await productsModel.getAll();
 
@@ -38,16 +40,19 @@ describe('Model Products', () => {
         after(async () => {
             connection.execute.restore();
         });
+
         it('retorna um array', async () => {
             const response = await productsModel.getAll();
 
             expect(response).to.be.an('array');
         });
+
         it('o array não está vazio', async () => {
             const response = await productsModel.getAll();
 
             expect(response).to.be.not.empty;
         });
+
         it('o array contem "id", "name" e "quantity"', async () => {
             const [response] = await productsModel.getAll();
 
@@ -68,16 +73,27 @@ describe('Model Products', () => {
         after(async () => {
             productsModel.create.restore();
         });
-        it('cadastra um produto com sucesso', async () => {
+
+        it('retorna um objeto', async () => {
             const newProduct = await productsModel.create("Produto2", 200);
 
             expect(newProduct).to.be.an('object');
+        });
+
+        it('o objeto não esta vazio', async () => {
+            const newProduct = await productsModel.create("Produto2", 200);
+
             expect(newProduct).to.be.not.empty;
+        });
+
+        it('cadastra as keys necessarias', async () => {
+            const newProduct = await productsModel.create("Produto2", 200);
+
             expect(newProduct).to.contains.keys('id', 'name', 'quantity');
         });
     });
 
-    describe('4 - testa se a funçao getByName seleciona pelo nome', async () => {
+     describe('4 - testa se a funçao getByName seleciona pelo nome', async () => {
         before(async () => {
             sinon.stub(productsModel, 'getByName').returns(
                 {
@@ -88,17 +104,30 @@ describe('Model Products', () => {
                 }
             );
         });
+
         after(async () => {
             productsModel.getByName.restore();
         });
-        it('encontra um produto com sucesso', async () => {
+
+        it('encontra um objeto', async () => {
             const nameProduct = await productsModel.getByName('Produto2');
 
             expect(nameProduct).to.be.an('object');
+        });
+
+        it('objeto não esta vazio', async () => {
+            const nameProduct = await productsModel.getByName('Produto2');
+
             expect(nameProduct).to.be.not.empty;
+        });
+
+        it('objeto possui as keys', async () => {
+            const nameProduct = await productsModel.getByName('Produto2');
+
             expect(nameProduct).to.contains.keys('id', 'name', 'quantity');
         });
     });
+
     describe('5 - testa se a função getById seleciona pelo id', async () => {
         before(async () => {
             sinon.stub(productsModel, 'getById').returns(
@@ -113,13 +142,24 @@ describe('Model Products', () => {
         after(async () => {
             productsModel.getById.restore();
         });
-        it('encontra um produto com sucesso', async () => {
+
+        it('produto encontrado é um objeto', async () => {
              const productId = await productsModel.getById(1);
 
              expect(productId).to.be.an('object');
-             expect(productId).to.be.not.empty;
-             expect(productId).to.contains.keys('id', 'name', 'quantity');
         });
+
+        it('o objeto não esta vazio', async () => {
+            const productId = await productsModel.getById(1);
+
+            expect(productId).to.be.not.empty;
+       });
+
+        it('objeto possui as keys', async () => {
+            const productId = await productsModel.getById(1);
+
+            expect(productId).to.contains.keys('id', 'name', 'quantity');
+    });
     });
     describe('6 - testa se a função productUpdate edita um produto', async () => {
         before(async () => {
@@ -134,13 +174,21 @@ describe('Model Products', () => {
         after(async () => {
             productsModel.productUpdate.restore();
         });
-        it('edita um produto com sucesso', async () => {
+        it('retorna um objeto', async () => {
             const update = await productsModel.productUpdate('Produto10', 11);
 
             expect(update).to.be.an('object');
+        });
+        it('objeto não esta vazio', async () => {
+            const update = await productsModel.productUpdate('Produto10', 11);
+
             expect(update).to.be.not.empty;
+        });
+        it('contem as keys', async () => {
+            const update = await productsModel.productUpdate('Produto10', 11);
+
             expect(update).to.contains.keys('id', 'name', 'quantity');
-        })
-    })
+        });
+    });
 });
 
