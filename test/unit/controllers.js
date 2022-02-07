@@ -79,6 +79,43 @@ describe('12 - Testando a function "create"', () => {
     });
 });
 
+/* describe('13 - Testando a função getById de products', () => {
+  const response = {};
+  const request = {};
+
+  before(async () => {
+    request.body = {};
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns()
+
+    sinon.stub(productsServices, 'getById')
+      .returns([
+        {
+          "id": 1,
+          "name": "produto A",
+          "quantity": 10
+        }]
+      );
+  });
+
+  after(async () => {
+    productsServices.getById.restore();
+  });
+
+  it('é chamado o método "status" passando 201', async () => {
+     await productsControllers.getById(request, response);
+
+     expect(response.status.calledWith(201)).to.be.equal(true);
+  });
+
+  it('chamado o método "json" passando a mensagem "create product"', async () => {
+     await productsControllers.getById(request, response);
+
+    expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+  });
+}); */
+
 describe('13 - quando existem produtos no banco de dados', () => {
   const response = {};
   const request = {};

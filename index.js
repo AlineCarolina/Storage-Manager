@@ -33,6 +33,8 @@ app.get('/sales/:id', salesControllers.getById);
 
 app.put('/sales/:id', verifySales, salesControllers.saleUpdate);
 
+app.delete('/sales/:id', salesControllers.saleDelete);
+
 app.listen(process.env.PORT, () => {
   console.log(`Escutando na porta ${process.env.PORT}`);
 });

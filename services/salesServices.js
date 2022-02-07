@@ -44,9 +44,32 @@ const saleUpdate = async (id, arrSales) => {
   return response;
 };
 
+const saleDelete = async (id) => {
+  const result = await salesModel.getById(id);
+
+  if (!result) return false;
+
+  await salesModel.saleDelete(id);
+
+  /* const remove = await Promise.all(
+    result.map(({ product_id, quantity }) => salesModel
+    .infoDel(product_id, quantity)),
+    );
+    return remove;
+    */
+  return result;
+  };
+
+/*   }
+  const response = await salesModel.saleUpdate(id, arrSales);
+
+  return response;
+ */
+
 module.exports = {
     create,
     getAll,
     getById,
     saleUpdate,
+    saleDelete,
 };
