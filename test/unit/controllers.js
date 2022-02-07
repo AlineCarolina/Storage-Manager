@@ -115,3 +115,41 @@ describe('13 - quando existem produtos no banco de dados', () => {
     expect(response.json.calledWith(sinon.match.object)).to.be.equal(false);
   });
 });
+
+describe('12 - Testando a function "create" sales', () => {
+  const response = {};
+  const request = {};
+
+  before(async () => {
+    request.body = {};
+
+    response.status = sinon.stub().returns(response);
+    response.json = sinon.stub().returns()
+
+    sinon.stub(salesServices, 'create')
+      .returns([
+        {
+          "saleId": 1,
+          "date": "2021-09-09T04:54:29.000Z",
+          "product_id": 1,
+          "quantity": 2
+        }]
+      );
+  });
+
+  after(async () => {
+    salesServices.create.restore();
+  });
+
+  it('3.1 - é chamado o método "status" passando 201', async () => {
+     await salesControllers.create(request, response);
+
+     expect(response.status.calledWith(201)).to.be.equal(true);
+  });
+
+  it('3.2 - é chamado o método "json" passando a mensagem "create product"', async () => {
+     await salesControllers.create(request, response);
+
+    expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+  });
+});
