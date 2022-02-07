@@ -4,21 +4,22 @@ const productsModel = require('../../models/productsModel');
 const salesModel = require('../../models/salesModel');
 const connection = require('../../models/connection');
 
-describe('[MODEL] 1 - testa se função getAll retorna um array vazio se não existe produto criado', () => {
+describe('[PRODUCTS MODEL] 1 - testa se função getAll retorna um array vazio se não existe produto criado', () => {
     before(async () => {
             sinon.stub(connection, 'execute').resolves([[]]);
         });
-        after(async () => {
+
+    after(async () => {
             connection.execute.restore();
         });
 
-        it('retorna um array', async () => {
+    it('retorna um array', async () => {
             const response = await productsModel.getAll();
 
             expect(response).to.be.an('array');
         });
 
-        it('o array está vazio', async () => {
+    it('o array está vazio', async () => {
             const response = await productsModel.getAll();
 
             expect(response).to.be.empty;
@@ -37,6 +38,7 @@ describe('2 - testa se a função getAll retorna um array não vazio se existe p
             ],
         ]);
     });
+    
     after(async () => {
         connection.execute.restore();
     });
@@ -62,16 +64,18 @@ describe('2 - testa se a função getAll retorna um array não vazio se existe p
 
 describe('3 - testa se a função create cria um novo produto no DB', () => {
     before(async () => {
-        sinon.stub(productsModel, 'create').returns(
-            {
-                id: 1,
-                name: 'Produto',
-                quantity: 100,
-            }
-        );
+        sinon.stub(connection, 'execute').returns([
+            [
+                {
+                    id: 1,
+                    name: "produto A",
+                    quantity: 10
+                }
+            ],
+        ]);
     });
     after(async () => {
-        productsModel.create.restore();
+        sinon.restore();
     });
 
     it('retorna um objeto', async () => {
@@ -95,18 +99,19 @@ describe('3 - testa se a função create cria um novo produto no DB', () => {
 
 describe('4 - testa se a funçao getByName seleciona pelo nome', () => {
     before(async () => {
-        sinon.stub(productsModel, 'getByName').returns(
-            {
-                id: 1,
-                name: 'Produto2',
-                quantity: 100
-
-            }
-        );
+        sinon.stub(connection, 'execute').returns([
+            [
+                {
+                    id: 1,
+                    name: "produto A",
+                    quantity: 10
+                }
+            ],
+        ]);
     });
 
     after(async () => {
-        productsModel.getByName.restore();
+        connection.execute.restore();
     });
 
     it('encontra um objeto', async () => {
@@ -130,17 +135,18 @@ describe('4 - testa se a funçao getByName seleciona pelo nome', () => {
 
 describe('5 - testa se a função getById seleciona pelo id', () => {
     before(async () => {
-        sinon.stub(productsModel, 'getById').returns(
-            {
-                id: 1,
-                name: 'Produto5',
-                quantity: 500
-
-            }
-        );
+        sinon.stub(connection, 'execute').returns([
+            [
+                {
+                    id: 1,
+                    name: "produto A",
+                    quantity: 10
+                }
+            ],
+        ]);
     });
     after(async () => {
-        productsModel.getById.restore();
+        connection.execute.restore();
     });
 
     it('produto encontrado é um objeto', async () => {
@@ -164,41 +170,122 @@ describe('5 - testa se a função getById seleciona pelo id', () => {
 
 describe('6 - testa se a função productUpdate edita um produto', () => {
     before(async () => {
-        sinon.stub(productsModel, 'productUpdate').returns(
-            {
-                id: 1,
-                name: 'Produto10',
-                quantity: 10
-            }
-        );
+        sinon.stub(connection, 'execute').returns([
+            [
+                {
+                    id: 1,
+                    name: "produto A",
+                    quantity: 10
+                }
+            ],
+        ]);
     });
-    after(async () => {
-        productsModel.productUpdate.restore();
-    });
-    it('retorna um objeto', async () => {
-        const update = await productsModel.productUpdate('Produto10', 11);
 
-        expect(update).to.be.an('object');
-    });
-    it('objeto não esta vazio', async () => {
-        const update = await productsModel.productUpdate('Produto10', 11);
-
-        expect(update).to.be.not.empty;
-    });
-    it('contem as keys', async () => {
-        const update = await productsModel.productUpdate('Produto10', 11);
-
-        expect(update).to.contains.keys('id', 'name', 'quantity');
-    });
-});
-
-describe('7 - testa a função getAll de sales', () => {
-    before(async () => {
-        sinon.stub(connection, 'execute').returns([[]]);
-    });
     after(async () => {
         connection.execute.restore();
     });
+
+    it('retorna um objeto', async () => {
+        const update = await productsModel.productUpdate("Produto2", 200);
+
+        expect(update).to.be.an('object');
+    });
+
+    it('objeto não esta vazio', async () => {
+        const update = await productsModel.productUpdate("Produto2", 200);
+
+        expect(update).to.be.not.empty;
+    });
+
+    it('contem as keys', async () => {
+        const update = await productsModel.productUpdate("Produto2", 200);
+
+        expect(update).to.contains.keys('update');
+    });
+});
+
+describe('7 - testa a função delete', () => {
+    before(async () => {
+        sinon.stub(connection, 'execute').returns([
+            [
+                {
+                    id: 1,
+                    name: "produto A",
+                    quantity: 10
+                }
+            ],
+        ]);
+    });
+
+    after(async () => {
+        connection.execute.restore();
+    });
+
+    it('retorna um objeto', async () => {
+        const update = await productsModel.deleteProducts(1);
+
+        expect(update).to.be.an('object');
+    });
+
+    it('objeto não esta vazio', async () => {
+        const update = await productsModel.deleteProducts(1);
+
+        expect(update).to.be.not.empty;
+    });
+
+    it('contem as keys', async () => {
+        const update = await productsModel.deleteProducts(1);
+
+        expect(update).to.contains.keys('update');
+    });
+});
+
+/* describe('8 [SALES MODEL] - Testa a Função create sales', () => {
+    before(async () => {
+      sinon.stub(connection, 'execute').returns([
+        [
+            {
+                id: 1,
+                name: "produto A",
+                quantity: 10
+            }
+        ],
+    ]);
+    });
+
+    after(async () => {
+      connection.execute.restore();
+    })
+
+    it('retorna um object', async () => {
+      const response = await salesModel.create(1);
+
+      expect(response).to.be.an('object');
+    });
+
+    it('o objeto não está vazio', async () => {
+      const response = await salesModel.create(1);
+
+      expect(response).to.be.not.empty;
+    });
+
+    it(' oobjeto possui as propriedades: "id", "itemsSold"', async () => {
+      const item = await salesModel.create(1);
+
+      expect(item).to.include.all.keys('id');
+    });
+  }); */
+
+
+describe('8 - testa a função getAll de sales', () => {
+    before(async () => {
+        sinon.stub(connection, 'execute').returns([[]]);
+    });
+
+    after(async () => {
+        connection.execute.restore();
+    });
+
     it('retorna um array', async () => {
         const response = await salesModel.getAll();
   
@@ -212,36 +299,81 @@ describe('7 - testa a função getAll de sales', () => {
       }); 
 });
 
-describe('8 - testa a função getById de sales', () =>{
+describe('9 - testa a função getById de sales', () =>{
     before(async () => {
-        sinon.stub(salesModel, 'getById').returns(
-            {
-                "id": 1,
-                "itemsSold": [
-                  {
-                    "product_id": 1,
-                    "quantity": 3
-                  }  
-                ]
-            }
-        );
+        sinon.stub(connection, 'execute').returns([
+            [
+                {
+                    id: 1,
+                    name: "produto A",
+                    quantity: 10
+                }
+            ],
+        ]);
     });
     after(async () => {
-        salesModel.getById.restore();
+        connection.execute.restore();
     });
-    it('retona um array', async () => {
-        const response = await salesModel.getById(1);
+
+    it('retona um object', async () => {
+        const [response] = await salesModel.getById(1);
 
         expect(response).to.be.an('object');
     });
     it('o objeto não esta vazio', async () => {
-        const response = await salesModel.getById(1);
+        const [response] = await salesModel.getById(1);
 
         expect(response).to.be.not.empty;
     });
     it('o objeto possui id e itemSold', async () => {
-        const response = await salesModel.getById(1);
+        const [response] = await salesModel.getById(1);
 
-        expect(response).to.include.all.keys('id', 'itemsSold');
+        expect(response).to.include.all.keys('id', 'name', 'quantity');
     });
 });
+
+/* describe('10 - testa funçaõ q edita sale', () => {
+    before(async () => {
+        sinon.stub(connection, 'execute').returns([
+            {
+                "id": 1,
+              "itemsSold": [
+                {
+                  "product_id": 1,
+                  "quantity": 3
+                }
+              ]
+            }]
+        );
+    });
+    after(async () => {
+        connection.execute.restore();
+    });
+    it('retorna um object', async () =>{
+        const [response] = await salesModel.saleUpdate(1, [1]);
+
+        expect(response).to.be.an('object');
+    });
+    it('objeto não está vazio', async () => {
+        const [response] = await salesModel.saleUpdate([
+            {
+              1,
+              [{  }]
+            }
+          ]);
+
+        expect(response).to.be.not.empty;
+      });
+      it('o objeto possui as propriedades: "id", "itemsSold"', async () => {
+        const [response] = await salesModel.saleUpdate([
+            {
+              "product_id": "id_change",
+              "quantity": "new_quantity"
+            }
+          ]);
+
+        expect(response).to.include.all.keys('id', 'itemsSold');
+      });
+});
+ */
+
