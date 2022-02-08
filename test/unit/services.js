@@ -65,8 +65,8 @@ describe('2 - testa se a função getAll retorna um array não vazio se existe p
         expect(response).to.contains.keys('id', 'name', 'quantity');
     });
 });
-/* 
-describe('3 - testa se a função create cria um novo produto no DB', () => {
+
+/* describe('3 - testa se a função create cria um novo produto no DB', () => {
     before(async () => {
         sinon.stub(productsModel, 'create').returns([
             [
@@ -78,12 +78,13 @@ describe('3 - testa se a função create cria um novo produto no DB', () => {
             ],
         ]);
     });
+    
     after(async () => {
       productsModel.create.restore();
     });
 
     it('retorna um objeto', async () => {
-        const newProduct = await productsServices.create("Produto2", 200);
+        const [newProduct] = await productsServices.create("Produto2", 200);
 
         expect(newProduct).to.be.an('object');
     });
@@ -99,43 +100,7 @@ describe('3 - testa se a função create cria um novo produto no DB', () => {
 
         expect(newProduct).to.contains.keys('id', 'name', 'quantity');
     });
-});
-
-describe('4 - testa se a funçao getByName seleciona pelo nome', () => {
-    before(async () => {
-        sinon.stub(productsModel, 'getByName').returns([
-            [
-                {
-                    id: 1,
-                    name: "produto A",
-                    quantity: 10
-                }
-            ],
-        ]);
-    });
-
-    after(async () => {
-      productsModel.getByName.restore();
-    });
-
-    it('encontra um objeto', async () => {
-        const nameProduct = await productsServices.getByName('Produto2');
-
-        expect(nameProduct).to.be.an('object');
-    });
-
-    it('objeto não esta vazio', async () => {
-        const nameProduct = await productsServices.getByName('Produto2');
-
-        expect(nameProduct).to.be.not.empty;
-    });
-
-    it('objeto possui as keys', async () => {
-        const nameProduct = await productsServices.getByName('Produto2');
-
-        expect(nameProduct).to.contains.keys('id', 'name', 'quantity');
-    });
-});
+}); */
 
 describe('5 - testa se a função getById seleciona pelo id', () => {
     before(async () => {
@@ -172,77 +137,77 @@ describe('5 - testa se a função getById seleciona pelo id', () => {
     });
 });
 
- describe('6 - testa se a função productUpdate edita um produto', () => {
+/*  describe('6 - testa se a função productUpdate edita um produto', () => {
     before(async () => {
-        sinon.stub(connection, 'execute').returns([
+        sinon.stub(productsModel, 'productUpdate').returns([
             [
-                {
-                    id: 1,
-                    name: "produto A",
-                    quantity: 10
+                {   update:
+                    {
+                        id: 1,
+                        name: "produto A",
+                        quantity: 10
+                    }
                 }
             ],
         ]);
     });
 
     after(async () => {
-        connection.execute.restore();
+        productsModel.productUpdate.restore();
     });
 
     it('retorna um objeto', async () => {
-        const [update] = await productsModel.productUpdate(1, "Produto A", 12);
-
+        const update = await productsServices.productUpdate(1, "produto A", 12);
+        console.log(update);
         expect(update).to.be.an('object');
     });
 
     it('objeto não esta vazio', async () => {
-        const [update] = await productsModel.productUpdate(1, "Produto A", 12);
+        const [[update]] = await productsServices.productUpdate(1, "Produto A", 12);
 
         expect(update).to.be.not.empty;
     });
 
     it('contem as keys', async () => {
-        const [update] = await productsModel.productUpdate(1, "Produto A", 12);
+        const [update] = await productsServices.productUpdate(1, "Produto A", 12);
 
         expect(update).to.contains.keys('id', 'name', 'quantity');
     });
 });
 
-describe('7 [SALES MODEL] - Testa a Função create sales', () => {
+describe('7 [SALES SERVICES] - Testa a Função create sales', () => {
     before(async () => {
-      sinon.stub(connection, 'execute').returns([
-        [
+      sinon.stub(salesModel, 'create').returns([
             {
                 id: 1,
                 name: "produto A",
                 quantity: 10
             }
-        ],
     ]);
     });
 
     after(async () => {
-      connection.execute.restore();
+        salesModel.create.restore();
     })
 
     it('retorna um object', async () => {
-      const [response] = await salesModel.create(1);
+      const [response] = await salesServices.create(1);
 
       expect(response).to.be.an('object');
     });
 
     it('o objeto não está vazio', async () => {
-      const response = await salesModel.create(1);
-
+      const response = await salesServices.create(1);
+        console.log(response);
       expect(response).to.be.not.empty;
     });
 
-    it(' oobjeto possui as propriedades: "id", "itemsSold"', async () => {
-      const item = await salesModel.create(1);
+    it(' oobjeto possui as propriedades: "id", "name" e quantity"', async () => {
+      const item = await salesServices.create(1);
 
-      expect(item).to.include.all.keys('id');
+      expect(item).to.include.all.keys('id', 'name', 'quantity');
     });
-  });
+  }); */
 
 describe('8 - testa a função getAll de sales', () => {
     before(async () => {
@@ -260,7 +225,7 @@ describe('8 - testa a função getAll de sales', () => {
     });
   
     it('retorna um array vazio', async () => {
-        const response = await salesServices.getAll();
+        const [response] = await salesServices.getAll();
   
         expect(response).to.be.empty;
       }); 
@@ -268,18 +233,16 @@ describe('8 - testa a função getAll de sales', () => {
 
 describe('9 - testa a função getById de sales', () =>{
     before(async () => {
-        sinon.stub(salesModel, 'execute').returns([
-            [
+        sinon.stub(salesModel, 'getById').returns([
                 {
                     id: 1,
                     name: "produto A",
                     quantity: 10
                 }
-            ],
         ]);
     });
     after(async () => {
-      salesModel.execute.restore();
+      salesModel.getById.restore();
     });
 
     it('retona um object', async () => {
@@ -287,15 +250,16 @@ describe('9 - testa a função getById de sales', () =>{
 
         expect(response).to.be.an('object');
     });
+
     it('o objeto não esta vazio', async () => {
         const [response] = await salesServices.getById(1);
 
         expect(response).to.be.not.empty;
     });
+
     it('o objeto possui id e itemSold', async () => {
         const [response] = await salesServices.getById(1);
 
         expect(response).to.include.all.keys('id', 'name', 'quantity');
     });
 }); 
-*/

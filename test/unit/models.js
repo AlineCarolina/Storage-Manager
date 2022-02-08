@@ -242,31 +242,23 @@ describe('7 - testa a função delete', () => {
 
 /* describe('8 [SALES MODEL] - Testa a Função create sales', () => {
     before(async () => {
-      sinon.stub(connection, 'execute').returns([
-        [
-            {
-                id: 1,
-                name: "produto A",
-                quantity: 10
-            }
-        ],
-    ]);
+      sinon.stub(connection, 'execute').returns([[]]);
     });
 
     after(async () => {
       connection.execute.restore();
-    })
-
-    it('retorna um object', async () => {
-      const response = await salesModel.create(1);
-
-      expect(response).to.be.an('object');
     });
 
-    it('o objeto não está vazio', async () => {
-      const response = await salesModel.create(1);
+    it('retorna um array', async () => {
+      const response = await salesModel.create();
 
-      expect(response).to.be.not.empty;
+      expect(response).to.be.an('array');
+    });
+    
+    it('o objeto está vazio', async () => {
+      const response = await salesModel.create();
+
+      expect(response).to.be.empty;
     });
 
     it(' oobjeto possui as propriedades: "id", "itemsSold"', async () => {
@@ -275,7 +267,6 @@ describe('7 - testa a função delete', () => {
       expect(item).to.include.all.keys('id');
     });
   }); */
-
 
 describe('8 - testa a função getAll de sales', () => {
     before(async () => {
@@ -376,4 +367,3 @@ describe('9 - testa a função getById de sales', () =>{
       });
 });
  */
-

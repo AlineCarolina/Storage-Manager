@@ -6,7 +6,7 @@ const productsControllers = require('../../controllers/productsControllers');
 const salesServices = require('../../services/salesServices');
 const salesControllers = require('../../controllers/salesControllers');
 
-describe('11 - quando existem produtos no banco de dados', () => {
+describe('11 [PRODUCTS CONTROLLERS] - quando existem produtos no banco de dados', () => {
     const response = {};
     const request = {};
 
@@ -42,6 +42,36 @@ describe('11 - quando existem produtos no banco de dados', () => {
     });
   });
 
+/*   describe('12 - quando NÃO existem produtos no banco de dados', () => {
+    const response = {};
+    const request = {};
+
+    before(async () => {
+      request.body = {};
+
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns()
+
+      sinon.stub(productsServices, 'getAll').returns({});
+    });
+
+    after(async () => {
+      productsServices.getAll.restore();
+    });
+
+    it('é chamado o método "status" passando ', async () => {
+      await productsControllers.getAll(request, response);
+
+      expect(response.status.calledWith(409)).to.be.equal(true);
+    });
+
+    it('é chamado o método "json" passando um objeto', async () => {
+      await productsControllers.getAll(request, response);
+
+      expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+    });
+  });
+ */
 describe('12 - Testando a function "create"', () => {
     const response = {};
     const request = {};
