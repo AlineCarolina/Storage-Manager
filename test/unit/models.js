@@ -200,7 +200,7 @@ describe('6 - testa se a função productUpdate edita um produto', () => {
     it('contem as keys', async () => {
         const update = await productsModel.productUpdate("Produto2", 200);
 
-        expect(update).to.contains.keys('update');
+        expect(update).to.contains.keys('id', 'name', 'quantity');
     });
 });
 
@@ -240,33 +240,42 @@ describe('7 - testa a função delete', () => {
     });
 });
 
-/* describe('8 [SALES MODEL] - Testa a Função create sales', () => {
-    before(async () => {
-      sinon.stub(connection, 'execute').returns([[]]);
-    });
-
-    after(async () => {
-      connection.execute.restore();
-    });
-
-    it('retorna um array', async () => {
-      const response = await salesModel.create();
-
-      expect(response).to.be.an('array');
-    });
-    
-    it('o objeto está vazio', async () => {
-      const response = await salesModel.create();
-
-      expect(response).to.be.empty;
-    });
-
-    it(' oobjeto possui as propriedades: "id", "itemsSold"', async () => {
-      const item = await salesModel.create(1);
-
-      expect(item).to.include.all.keys('id');
-    });
-  }); */
+describe('Testa o modelo de vendas', () => {
+    describe('A função createSale', () => {
+      const salePayload = [
+        {
+          "productId": 1,
+          "quantity": 2
+        },
+        {
+          "productId": 2,
+          "quantity": 5
+        }
+      ]
+      const saleResponse = {
+        "id": undefined,
+        "itemsSold": [
+          {
+            "productId": 1,
+            "quantity": 2
+          },
+          {
+            "productId": 2,
+            "quantity": 5
+          }
+        ]
+      }          
+      before(async () => {
+        const execute = [saleResponse]
+        sinon.stub(connection, "execute").resolves(execute)
+      })
+      after(async () => connection.execute.restore())
+      it('retorna o esperado', async () => {
+        const response = await salesModel.create(salePayload)
+        expect(response).to.deep.equal(saleResponse)
+      })
+    })
+});
 
 describe('8 - testa a função getAll de sales', () => {
     before(async () => {
