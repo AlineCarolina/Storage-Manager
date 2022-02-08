@@ -1,80 +1,120 @@
-const sinon = require('sinon');
-const { expect } = require('chai');
+const sinon = require("sinon");
+const { expect } = require("chai");
 
-const productsServices = require('../../services/productsServices');
-const productsControllers = require('../../controllers/productsControllers');
-const salesServices = require('../../services/salesServices');
-const salesControllers = require('../../controllers/salesControllers');
+const productService = require("../../services/productService");
+const productController = require("../../controllers/productController");
+const saleService = require("../../services/saleService");
+const saleController = require("../../controllers/saleController");
+const { products, product, ID } = require("./mocks");
 
-describe('11 [PRODUCTS CONTROLLERS] - quando existem produtos no banco de dados', () => {
-    const response = {};
+// Products
+
+describe("Testing productController", () => {
+  describe("getAllProducts", () => {
     const request = {};
+    const response = {};
 
-    before(async () => {
+    before(() => {
       request.body = {};
-
       response.status = sinon.stub().returns(response);
-      response.json = sinon.stub().returns()
-
-      sinon.stub(productsServices, 'getAll').returns(
-        {
-          id: 1,
-          name: "MacBook Air",
-          quantity: 10
-        }
-      );
+      response.json = sinon.stub().returns();
+      sinon.stub(productService, "getAllProducts").resolves(products);
     });
 
-    after(async () => {
-      productsServices.getAll.restore();
+    after(() => {
+      sinon.restore();
     });
 
-    it('2.1 é chamado o método "status" passando 200', async () => {
-      await productsControllers.getAll(request, response);
+    it("should return all products", async () => {
+      await productController.getAllProducts(request, response);
+      expect(response.status.calledWith(200)).to.be.true;
+    });
+  });
 
+  describe("getByIdProducts", () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      request.params = { id: ID };
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+      sinon.stub(productService, "getProductById").resolves(product);
+    });
+
+    after(() => {
+      sinon.restore();
+    });
+
+    it("should return a product by id", async () => {
+      await productController.getByIdProducts(request, response);
       expect(response.status.calledWith(200)).to.be.equal(true);
     });
+  });
 
-    it('2.2 - é chamado o método "json" passando um objeto', async () => {
-      await productsControllers.getAll(request, response);
+  describe("createProducts", () => {
+    const request = {};
+    const response = {};
 
-      expect(response.json.calledWith(sinon.match.object)).to.be.equal(true);
+    before(() => {
+      request.body = { name: "Abacaxi", quantity: 11 };
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+      sinon.stub(productService, "createProduct").resolves(product);
+    });
+
+    after(() => {
+      sinon.restore();
+    });
+
+    it("should return a new product", async () => {
+      await productController.createProducts(request, response);
+      expect(response.status.calledWith(201)).to.be.equal(true);
+    });
+  });
+});
+
+// Sales
+
+describe("Testing saleController", () => {
+  describe("getAllSales", () => {
+    const request = {};
+    const response = {};
+
+    before(() => {
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+      sinon.stub(saleService, "getAllSales").resolves(products);
+    });
+
+    after(() => {
+      sinon.restore();
+    });
+
+    it("should return all sales", async () => {
+      await saleController.getAllSales(request, response);
+      expect(response.status.calledWith(200)).to.be.equal(true);
     });
   });
 
-describe('13 - quando existem produtos no banco de dados', () => {
-  const response = {};
-  const request = {};
+  describe("returnSalesById", () => {
+    const request = {};
+    const response = {};
 
-  before(async () => {
-    request.body = {};
+    before(() => {
+      request.params = { id: ID };
+      response.status = sinon.stub().returns(response);
+      response.json = sinon.stub().returns();
+      sinon.stub(saleService, "getSaleById").resolves(products);
+    });
 
-    response.status = sinon.stub().returns(response);
-    response.json = sinon.stub().returns()
+    after(() => {
+      sinon.restore();
+    });
 
-    sinon.stub(salesServices, 'getAll').returns([
-      {
-        "saleId": 1,
-        "date": "2021-09-09T04:54:29.000Z",
-        "product_id": 1,
-        "quantity": 2
-      }]
-    );
-  });
-
-  after(async () => {
-    salesServices.getAll.restore();
-  });
-
-  it('2.1 é chamado o método "status" passando 200', async () => {
-    await salesControllers.getAll(request, response);
-
-    expect(response.status.calledWith(200)).to.be.equal(true);
-  });
-
-  it('2.2 - é chamado o método "json" passando um objeto', async () => {
-    await salesControllers.getAll(request, response);
-
-    expect(response.json.calledWith(sinon.match.object)).to.be.equal(false);
+    it("should return a sale by id", async () => {
+      await saleController.getByIdSales(request, response);
+      expect(response.status.calledWith(200)).to.be.equal(true);
+    });
   });
 });
