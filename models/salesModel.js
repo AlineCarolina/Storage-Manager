@@ -1,19 +1,29 @@
 const connection = require('./connection');
 
-const create = async (salesArray) => {
-    const [{ insertId }] = await connection
-        .execute('INSERT INTO sales VALUES ()');
-  
-    await Promise.all(
-      salesArray.map(
-        ({ product_id: productId, quantity }) => connection
-            .execute('INSERT INTO sales_products (sale_id, product_id, quantity) VALUES ( ?, ?, ?)',
-            [insertId, productId, quantity]),
-        ),
-      );
-  
-    return insertId;
-  };
+const createSaleId = async () => {
+  const [sale] = await connection.execute(
+    'INSERT INTO sales (id) VALUES (NULL)',
+  );
+
+  return sale.insertId;
+};
+
+const create = async (saleData) => {
+  const itemsSold = [];
+  const saleId = await createSaleId();
+
+  await Promise.all(saleData.map(async (product) => {
+    const { productId, quantity } = product;
+
+    await connection.execute(
+      'INSERT INTO sales_products (sale_id, product_id, quantity) VALUES (?, ?, ?)',
+      [saleId, productId, quantity],
+    );
+    itemsSold.push({ productId, quantity });
+  }));
+
+  return { id: saleId, itemsSold };
+};
 
 const getAll = async () => {
   const [sales] = await connection

@@ -1,4 +1,4 @@
-const verifyName = (req, res, next) => {
+/* const verifyName = (req, res, next) => {
     const { name } = req.body;
   
     if (!name || name === '') {
@@ -47,8 +47,40 @@ const verifyName = (req, res, next) => {
     next();
   };
 
+  const validateQuantity = (quantity) => {
+    if (quantity === undefined) return { code: 400, message: '"quantity" is required' };
+    if (quantity < 1 || typeof quantity !== typeof 1) { 
+      return { code: 422, message: '"quantity" must be a number larger than or equal to 1' };
+    }
+    return null;
+  }; */
+  
+  const validateProductId = (productId) => {
+    if (!productId) return { code: 400, message: '"product_id" is required' };
+    return null;
+  };
+
+  const validateName = (name) => {
+    if (!name) return { code: 400, message: '"name" is required' };
+    if (name.length < 5) { 
+      return { code: 422, message: '"name" length must be at least 5 characters long' };
+    }
+    return null;
+  };
+  
+  const validateQuantity = (quantity) => {
+    if (quantity === undefined) return { code: 400, message: '"quantity" is required' };
+    if (quantity < 1 || typeof quantity !== typeof 1) { 
+      return { code: 422, message: '"quantity" must be a number larger than or equal to 1' };
+    }
+    return null;
+  };
+
 module.exports = {
-    verifyName,
+    /* verifyName,
     verifyQuantity,
-    verifySales,
+    verifySales, */
+    validateQuantity,
+    validateProductId,
+    validateName,
 };

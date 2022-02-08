@@ -1,18 +1,36 @@
 const salesServices = require('../services/salesServices');
+const { validateProductId, validateQuantity } = require('./validations');
 
-const create = async (req, res, next) => {
-    try {
-      const salesArray = req.body;
-      const newSale = await salesServices.create(salesArray);
-
-      if (!newSale) {
-          return res.status(400).json({ message: '"product_id" is required' });
-        }
-        return res.status(201).json({ id: newSale, itemsSold: salesArray });
-    } catch (err) {
-        next(err);
+const validateSale = (saleData) => {
+    const errors = saleData.map(({ product_id, quantity }) => {
+      if (!(validateProductId(product_id) || validateQuantity(quantity))) return {};
+      return validateProductId(product_id) || validateQuantity(quantity);
+    });
+    return errors.find((error) => error !== {});
+  };
+  
+  const serializeSale = (saleData) => (
+    saleData.map((product) => ({
+      productId: product.product_id,
+      quantity: product.quantity,
+    }))
+  );
+  
+  const create = async (req, res) => {
+    const saleData = req.body;
+    const error = validateSale(saleData);
+    if (error.code) {
+      const { code, message } = error;
+      return res.status(code).json({ message });
     }
-};
+  
+    const sale = await salesServices.create(serializeSale(saleData));
+    if (sale.error) {
+      const { code, message } = sale.error;
+      return res.status(code).json({ message });
+    }
+    return res.status(201).json({ ...sale, itemsSold: saleData });
+  };
 
 const getAll = async (_req, res, next) => {
     try {

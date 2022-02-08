@@ -1,4 +1,5 @@
 const productsServices = require('../services/productsServices');
+const { validateName, validateQuantity } = require('./validations');
 
 const getAll = async (_req, res, next) => {
   try { 
@@ -43,19 +44,22 @@ const getById = async (req, res, next) => {
   }
 };
 
-const productUpdate = async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const { name, quantity } = req.body;
-
-    const update = await productsServices.productUpdate({ id, name, quantity });
-
-    if (update.status) return res.status(404).json({ message: 'Product not found' });
-
-  return res.status(200).json({ name, quantity });
-  } catch (err) {
-    next(err);
+const productUpdate = async (req, res) => {
+  const { name, quantity } = req.body;
+  const error = validateName(name) || validateQuantity(quantity);
+  if (error) {
+    const { code, message } = error;
+    return res.status(code).json({ message });
   }
+  const { id } = req.params;
+  const product = await productsServices.productUpdate(Number(id), name, quantity);
+
+  if (product.error) {
+    const { code, message } = product.error;
+    return res.status(code).json({ message });
+  }
+
+  return res.status(200).json(product);
 };
 
 const deleteProducts = async (req, res, next) => {

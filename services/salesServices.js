@@ -1,17 +1,41 @@
 const salesModel = require('../models/salesModel');
 const productsModel = require('../models/productsModel');
 
-const create = async (sales) => {
-    const allProducts = await Promise.all(
-      sales.map(({ product_id }) => productsModel.getById(product_id)),
-    );
-  
-    if (allProducts.length !== sales.length) return false;
-  
-    const id = await salesModel.create(sales);
-  
-    return id;
-  };
+const updateProductStock = async (saleData, action) => {
+  const [error] = await Promise.all(saleData.map(async ({ productId, quantity }) => {
+    const product = await productsModel.getById(productId);
+    const { id, name } = product;
+    let newQuantity = 0;
+    switch (action) {
+      case 'remove':
+        newQuantity = product.quantity - quantity;
+        break;
+      case 'add':
+        newQuantity = product.quantity + quantity;
+        break;
+      default:
+        break;
+    }
+    if (newQuantity < 0) return 'error';
+    await productsModel.productUpdate(id, name, newQuantity);
+  }));
+  if (error === 'error') return 'error';
+};
+
+const create = async (saleData) => {
+  const sale = await salesModel.create(saleData);
+  const { itemsSold } = sale;
+  const error = await updateProductStock(itemsSold, 'remove');
+  if (error === 'error') {
+    return {
+      error: {
+        code: 422,
+        message: 'Such amount is not permitted to sell',
+      },
+    };
+  }
+  return sale;
+};
 
 const getAll = async () => {
     const sales = await salesModel.getAll();

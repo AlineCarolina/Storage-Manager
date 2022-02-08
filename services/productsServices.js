@@ -31,13 +31,19 @@ const getById = async (id) => {
   return catchedId;
 };
 
-const productUpdate = async ({ id, name, quantity }) => {
-  const product = await productsModel.productUpdate({ id, name, quantity });
-
-  if (!product.update) {
-    return { status: 404 };
+const productUpdate = async (id, name, quantity) => {
+  const existingProduct = await productsModel.getById(id);
+  if (!existingProduct) {
+    return {
+      error: {
+        code: 404,
+        message: 'Product not found',
+      },
+    };
   }
-  return product;
+
+  const updatedProduct = await productsModel.productUpdate(id, name, quantity);
+  return updatedProduct;
 };
 
 const deleteProducts = async (id) => {
