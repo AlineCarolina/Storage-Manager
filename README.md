@@ -30,9 +30,17 @@ $ git clone git@github.com:AlineCarolina/Storage-Manager.git
 ```
 $ npm install
 ```
-3. To start the server in development mode just run the command
+3. Create an .env file with the necessary environment variables, for example:
 ```
-$ npm run dev
+MYSQL_HOST=localhost
+MYSQL_USER=nome
+MYSQL_PASSWORD=1234
+PORT=3000
+```
+4. Restore the database contained in the file ./StoreManager.sql
+5. To start the server in development mode just run the command
+```
+$ npm start
 ```
 
 ---
