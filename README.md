@@ -6,7 +6,7 @@ This project is my first CRUD API using the MSC architecture. The API is a sales
 
 ## About the project
 
-Esse projeto foi desenvolvido com foco em aprender a construir APIs usando a arquitetura MSC (Models, Services e Controllers). Atraves da aplicação é possivel realizar um CRUD de todos os dados contidos no banco de dados (MySQL).
+This project was developed with a focus on learning how to build APIs using the MSC (Models, Services and Controllers) architecture. Through the application it is possible to carry out a CRUD of all the data contained in the database (MySQL).
 
 ---
 
